@@ -1,6 +1,8 @@
 # Bookmark Dashboard Chrome Extension
 The Bookmark Dashboard Chrome Extension provides a visual dashboard that displays all your bookmarks with their icons, allowing you to easily navigate and access your bookmarks in a structured manner. With this extension, you can quickly see bookmarks organized in folders, providing a convenient alternative to the default bookmarks bar.
 
+![image](https://github.com/HowToGibbon/BookmarkDashboardExtension/assets/23332564/87125cfa-cd86-49ab-95d4-a674e1546ef2)
+
 ## Features
 Displays all bookmarks with their icons in a visual dashboard.
 Organizes bookmarks and folders based on your bookmark structure.
