@@ -8,35 +8,71 @@ document.addEventListener('DOMContentLoaded', function() {
   function renderTopLevelFolders(bookmarkNodes, parentNode) {
     var topLevelFolderElement = document.createElement('div');
     topLevelFolderElement.classList.add('top-level-folder');
-  
+
+    var folderElement = document.createElement('div');
+    folderElement.classList.add('second-level-folder');
+
+    var cardElement = document.createElement('div');
+    cardElement.classList.add('card');
+
+    var titleElement = document.createElement('h2');
+    titleElement.textContent = "Bookmarks";
+    folderElement.id = "TopBookmarkList"
+    
     bookmarkNodes.forEach(function(bookmarkNode) {
       if (bookmarkNode.children && bookmarkNode.children.length > 0) {
-        renderFolder(bookmarkNode, topLevelFolderElement);
+        prepareBookmarkList(bookmarkNode.children);        
+        renderChildren(bookmarkNode.children, topLevelFolderElement, cardElement);
       }
     });
   
+    folderElement.prepend(cardElement);
+    folderElement.prepend(titleElement);
+    topLevelFolderElement.prepend(folderElement);
     parentNode.appendChild(topLevelFolderElement);
   }
   
-  function renderFolder(folderNode, parentNode) {
-    var folderElement = document.createElement('div');
-    folderElement.classList.add('folder');
-    folderElement.textContent = folderNode.title;
-  
-    var folderChildrenElement = document.createElement('div');
-    folderChildrenElement.classList.add('second-level-folder');
-  
-    folderNode.children.forEach(function(childNode) {
-      if (childNode.url) {
-        renderBookmark(childNode, folderChildrenElement);
+  function renderChildren(children, parentNode, TopBookmarkListParentNode) {       
+    children.forEach(function(childNode) {
+      if (childNode.url) {     
+        if (childNode.parentId === "1"){
+          renderBookmark(childNode, TopBookmarkListParentNode);
+        }else{
+          renderBookmark(childNode, parentNode);
+        }
       } else if (childNode.children && childNode.children.length > 0) {
-        renderFolder(childNode, folderChildrenElement);
+        var folderElement = document.createElement('div');
+        folderElement.classList.add('second-level-folder');  
+        
+        var titleElement = document.createElement('h2');
+        titleElement.textContent = childNode.title;
+        titleElement.classList.add('collapsible');
+ 
+        folderElement.prepend(titleElement);     
+
+        var cardElement = document.createElement('div');
+        cardElement.classList.add('card');
+        cardElement.classList.add('content');
+        cardElement.classList.add('active');
+
+        renderChildren(childNode.children, cardElement, TopBookmarkListParentNode);
+
+        folderElement.appendChild(cardElement);     
+        parentNode.appendChild(folderElement);          
       }
     });
   
-    folderElement.appendChild(folderChildrenElement);
-    parentNode.appendChild(folderElement);
   }
+
+  function prepareBookmarkList(children) { 
+    children.sort( (a, b) => {          
+      if (a.children && b.children && a.children.length < b.children.length) return -1;
+      if (a.children && b.children && a.children.length > b.children.length) return 1;
+      if (a.children && !b.children) return 1;
+      if (!a.children && b.children) return -1;
+      return 0;
+    })
+  }     
   
   function renderBookmark(bookmarkNode, parentNode) {
     var bookmarkElement = document.createElement('div');
@@ -65,4 +101,3 @@ document.addEventListener('DOMContentLoaded', function() {
     hostname = hostname.split('?')[0];
     return hostname;
   }
-  
